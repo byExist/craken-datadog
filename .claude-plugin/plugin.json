@@ -1,0 +1,28 @@
+{
+  "name": "datadog",
+  "description": "Datadog (logs, metrics, traces, monitors) integration via MCP",
+  "repository": "https://github.com/byExist/craken-datadog",
+  "defaultEnabled": false,
+  "userConfig": {
+    "datadog_api_key": {
+      "type": "string",
+      "title": "Datadog API key",
+      "description": "Identifies your organization. Create one at Organization Settings → API Keys. Stored in the OS keychain, not in settings.json.",
+      "sensitive": true,
+      "required": true
+    },
+    "datadog_app_key": {
+      "type": "string",
+      "title": "Datadog application key",
+      "description": "Identifies you and authorizes read / query endpoints. Create one at Organization Settings → Application Keys. Stored in the OS keychain, not in settings.json.",
+      "sensitive": true,
+      "required": true
+    },
+    "datadog_site": {
+      "type": "string",
+      "title": "Datadog site",
+      "description": "Your Datadog region, taken from the URL after you log in. e.g. datadoghq.com (US1), us3.datadoghq.com, us5.datadoghq.com, datadoghq.eu, ap1.datadoghq.com, ddog-gov.com.",
+      "default": "datadoghq.com"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "datadog": {
+      "command": "uv",
+      "args": ["run", "--directory", "${CLAUDE_PLUGIN_ROOT}", "python", "-m", "datadog_mcp"],
+      "env": {
+        "DD_API_KEY": "${user_config.datadog_api_key}",
+        "DD_APP_KEY": "${user_config.datadog_app_key}",
+        "DD_SITE": "${user_config.datadog_site}"
+      }
+    }
+  }
+}
