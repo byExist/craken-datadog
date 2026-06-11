@@ -65,9 +65,6 @@ Limit: TypeAlias = Annotated[int, Field(description="Maximum number of results."
 Cursor: TypeAlias = Annotated[
     str | None, Field(description="Pagination cursor returned by a prior call.")
 ]
-Include: TypeAlias = Annotated[
-    str | None, Field(description="Comma-separated related resources to side-load.")
-]
 Compute: TypeAlias = Annotated[
     list[dict[str, Any]],
     Field(
@@ -95,8 +92,12 @@ GroupBy: TypeAlias = Annotated[
 Queries: TypeAlias = Annotated[
     list[dict[str, Any]],
     Field(
-        description="Formula-and-function queries, e.g. "
-        "[{'data_source': 'metrics', 'query': 'avg:system.cpu.user{*}', 'name': 'a'}]."
+        description="Timeseries query inputs (oneOf by data_source). Metrics sources "
+        "(data_source 'metrics' or 'cloud_cost') take a classic query string: "
+        "{'data_source': 'metrics', 'query': 'avg:system.cpu.user{*} by {env}', "
+        "'name': 'a'}. Event sources (logs, spans, rum, network, security_signals, "
+        "profiles, audit, events, ci_tests, ci_pipelines) instead take a 'compute' "
+        "object, not 'query'. 'name' is the variable referenced by formulas."
     ),
 ]
 Formulas: TypeAlias = Annotated[
@@ -217,10 +218,18 @@ def get_host_totals(
 def list_containers(
     *,
     filter_tags: Annotated[
-        str | None, Field(description="Filter by tags, e.g. 'kube_namespace:prod'.")
+        str | None,
+        Field(
+            description="Comma-separated list of tags to filter by, "
+            "e.g. 'env:prod,short_image:cassandra'."
+        ),
     ] = None,
     sort: Annotated[
-        str | None, Field(description="Sort field; prefix '-' for descending.")
+        str | None,
+        Field(
+            description="Container attribute to sort by, e.g. 'started_at'; "
+            "prefix '-' for descending."
+        ),
     ] = None,
     page_size: Annotated[int | None, Field(description="Containers per page.")] = None,
     page_cursor: Cursor = None,
@@ -237,7 +246,11 @@ def list_processes(
         str | None, Field(description="Substring match on the process command line.")
     ] = None,
     tags: Annotated[
-        str | None, Field(description="Filter by tags, e.g. 'host:web-1'.")
+        str | None,
+        Field(
+            description="Comma-separated list of tags to filter by, "
+            "e.g. 'account:prod,user:admin'."
+        ),
     ] = None,
     from_: Annotated[
         int | None, Field(description="Window start in epoch seconds.")
@@ -304,14 +317,26 @@ def aggregate_spans(
 
 
 def get_trace(
-    trace_id: Annotated[str, Field(description="The 128-bit trace ID (32-char hex).")],
+    trace_id: Annotated[
+        str,
+        Field(
+            description="Trace ID — a 32-character hex string, or a decimal string of "
+            "up to 39 digits."
+        ),
+    ],
 ) -> TraceResponse:
     """Get a full APM trace by ID — every span as a flat list (preview API; large traces can be sizable)."""
     return client.get_trace(trace_id)
 
 
 def get_pruned_trace(
-    trace_id: Annotated[str, Field(description="The 128-bit trace ID (32-char hex).")],
+    trace_id: Annotated[
+        str,
+        Field(
+            description="Trace ID — a 32-character hex string, or a decimal string of "
+            "up to 39 digits."
+        ),
+    ],
 ) -> PrunedTraceResponse:
     """Get a pruned APM trace by ID — a size-reduced hierarchical span tree, ideal for inspecting one trace cheaply (preview API)."""
     return client.get_pruned_trace(trace_id)
@@ -376,7 +401,13 @@ def search_monitors(
     *,
     page: Annotated[int, Field(description="Zero-based page number.")] = 0,
     per_page: Annotated[int, Field(description="Results per page.")] = 30,
-    sort: Sort = None,
+    sort: Annotated[
+        str | None,
+        Field(
+            description="Sort as 'field,direction', e.g. 'name,asc'. "
+            "Fields: name, status, tags. Directions: asc, desc."
+        ),
+    ] = None,
 ) -> MonitorSearchResponse:
     """Search monitors with a monitor query; returns matches with facet counts."""
     return client.search_monitors(query, page=page, per_page=per_page, sort=sort)
@@ -394,7 +425,18 @@ def query_timeseries(
 
 
 def query_scalar(
-    queries: Queries,
+    queries: Annotated[
+        list[dict[str, Any]],
+        Field(
+            description="Scalar query inputs (oneOf by data_source). Metrics sources "
+            "(data_source 'metrics' or 'cloud_cost') require an 'aggregator' (one of: "
+            "avg, min, max, sum, last, percentile, mean, l2norm, area): "
+            "{'data_source': 'metrics', 'query': 'avg:system.cpu.user{*} by {env}', "
+            "'aggregator': 'avg', 'name': 'a'}. Event sources (logs, spans, rum, …) "
+            "instead take a 'compute' object, not 'query'. 'name' is referenced by "
+            "formulas."
+        ),
+    ],
     *,
     from_: EpochMs,
     to: EpochMs,
@@ -435,7 +477,13 @@ def list_downtimes(
     current_only: Annotated[
         bool | None, Field(description="Only currently active downtimes.")
     ] = None,
-    include: Include = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Comma-separated related resources to side-load. "
+            "Allowed: created_by, monitor."
+        ),
+    ] = None,
     offset: Annotated[
         int | None, Field(description="Result offset for paging.")
     ] = None,
@@ -450,7 +498,13 @@ def list_downtimes(
 def get_downtime(
     downtime_id: Annotated[str, Field(description="The downtime's ID.")],
     *,
-    include: Include = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Comma-separated related resources to side-load. "
+            "Allowed: created_by, monitor."
+        ),
+    ] = None,
 ) -> DowntimeResponse:
     """Get a single downtime by ID."""
     return client.get_downtime(downtime_id, include=include)
@@ -544,12 +598,22 @@ def list_catalog_entities(
         str | None, Field(description="Filter by entity name.")
     ] = None,
     filter_kind: Annotated[
-        str | None, Field(description="Filter by kind, e.g. 'service', 'system'.")
+        str | None,
+        Field(
+            description="Filter by entity kind, e.g. 'service', 'system', 'api', "
+            "'datastore', 'queue'."
+        ),
     ] = None,
     filter_ref: Annotated[
         str | None, Field(description="Filter by reference, e.g. 'service:checkout'.")
     ] = None,
-    include: Include = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Relationship/detail data to include. "
+            "Allowed: schema, raw_schema, oncall, incident, relation."
+        ),
+    ] = None,
     page_limit: Annotated[int, Field(description="Entities per page.")] = 100,
     page_offset: Annotated[
         int | None, Field(description="Result offset for paging.")
@@ -575,7 +639,13 @@ def get_service_definition(
 
 def list_incidents(
     *,
-    include: Include = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Comma-separated related resources to side-load. "
+            "Allowed: users, attachments."
+        ),
+    ] = None,
     size: Annotated[int, Field(description="Incidents per page (max 100).")] = 10,
     offset: Annotated[int, Field(description="Result offset for paging.")] = 0,
 ) -> IncidentsResponse:
@@ -586,7 +656,13 @@ def list_incidents(
 def get_incident(
     incident_id: Annotated[str, Field(description="The incident's ID.")],
     *,
-    include: Include = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Comma-separated related resources to side-load. "
+            "Allowed: users, attachments."
+        ),
+    ] = None,
 ) -> IncidentResponse:
     """Get a single incident by ID."""
     return client.get_incident(incident_id, include=include)
@@ -594,11 +670,25 @@ def get_incident(
 
 def search_incidents(
     query: Annotated[
-        str, Field(description="Incident search query, e.g. 'state:active'.")
+        str,
+        Field(
+            description="Incident search query: facets joined by AND, values within a "
+            "facet by OR. e.g. 'state:active AND severity:(SEV-2 OR SEV-1)'."
+        ),
     ],
     *,
-    include: Include = None,
-    sort: Sort = None,
+    include: Annotated[
+        str | None,
+        Field(
+            description="Related resource to side-load. Allowed: users, attachments."
+        ),
+    ] = None,
+    sort: Annotated[
+        str | None,
+        Field(
+            description="Sort order: 'created' (ascending) or '-created' (descending)."
+        ),
+    ] = None,
     size: Annotated[int, Field(description="Incidents per page (max 100).")] = 10,
     offset: Annotated[int, Field(description="Result offset for paging.")] = 0,
 ) -> IncidentSearchResponse:
