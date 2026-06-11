@@ -19,7 +19,7 @@ def test_timeseries_query():
                         {
                             "group_tags": ["service:web"],
                             "query_index": 0,
-                            "unit": [{"name": "byte", "family": "bytes"}],
+                            "unit": [{"name": "byte", "family": "bytes"}, None],
                         }
                     ],
                     "times": [1000, 2000],
@@ -33,6 +33,10 @@ def test_timeseries_query():
     attrs = r.data.attributes
     assert attrs.series is not None
     assert attrs.series[0].group_tags == ["service:web"]
+    assert attrs.series[0].unit is not None
+    assert attrs.series[0].unit[0] is not None
+    assert attrs.series[0].unit[0].name == "byte"
+    assert attrs.series[0].unit[1] is None
     assert attrs.times == [1000, 2000]
     assert attrs.values == [[1.5, 2.5]]
 
@@ -48,7 +52,7 @@ def test_scalar_query_columns_union():
                             "type": "number",
                             "name": "cpu",
                             "values": [1.0, 2.0],
-                            "meta": {"unit": [{"name": "percent"}]},
+                            "meta": {"unit": [{"name": "percent"}, None]},
                         },
                         {
                             "type": "group",
@@ -66,6 +70,11 @@ def test_scalar_query_columns_union():
     assert cols is not None
     assert isinstance(cols[0], DataScalarColumn)
     assert cols[0].values == [1.0, 2.0]
+    assert cols[0].meta is not None
+    assert cols[0].meta.unit is not None
+    assert cols[0].meta.unit[0] is not None
+    assert cols[0].meta.unit[0].name == "percent"
+    assert cols[0].meta.unit[1] is None
     assert isinstance(cols[1], GroupScalarColumn)
     assert cols[1].values == [["web"], ["db"]]
 

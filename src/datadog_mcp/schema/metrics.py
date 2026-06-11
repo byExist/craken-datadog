@@ -86,7 +86,7 @@ class MetricPaginationMeta(DatadogModel):
 
 
 class ScalarMeta(DatadogModel):
-    unit: list[Unit] | None = None
+    unit: list[Unit | None] | None = None
 
 
 class DataScalarColumn(DatadogModel):
@@ -122,7 +122,7 @@ class ScalarFormulaQueryResponse(DatadogModel):
 class TimeseriesResponseSeries(DatadogModel):
     group_tags: GroupTags | None = None
     query_index: int | None = None
-    unit: list[Unit] | None = None
+    unit: list[Unit | None] | None = None
 
 
 type TimeseriesResponseSeriesList = list[TimeseriesResponseSeries]
