@@ -486,15 +486,11 @@ def get_slo(
 def get_slo_status(
     slo_id: str,
     *,
-    from_ts: int | None = None,
-    to_ts: int | None = None,
+    from_ts: int,
+    to_ts: int,
     disable_corrections: bool | None = None,
 ) -> SloStatusResponse:
-    params: dict[str, Any] = {}
-    if from_ts is not None:
-        params["from_ts"] = from_ts
-    if to_ts is not None:
-        params["to_ts"] = to_ts
+    params: dict[str, Any] = {"from_ts": from_ts, "to_ts": to_ts}
     if disable_corrections is not None:
         params["disable_corrections"] = disable_corrections
     resp = _get_client().get(f"/api/v2/slo/{slo_id}/status", params=params)

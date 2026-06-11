@@ -482,15 +482,8 @@ def get_slo(
 def get_slo_status(
     slo_id: Annotated[str, Field(description="The SLO's ID.")],
     *,
-    from_ts: Annotated[
-        int | None,
-        Field(
-            description="Window start in epoch seconds (defaults to the SLO timeframe)."
-        ),
-    ] = None,
-    to_ts: Annotated[
-        int | None, Field(description="Window end in epoch seconds.")
-    ] = None,
+    from_ts: Annotated[int, Field(description="Window start in epoch seconds.")],
+    to_ts: Annotated[int, Field(description="Window end in epoch seconds.")],
     disable_corrections: Annotated[
         bool | None,
         Field(description="Exclude SLO correction windows from the calculation."),
