@@ -70,11 +70,27 @@ Include: TypeAlias = Annotated[
 ]
 Compute: TypeAlias = Annotated[
     list[dict[str, Any]],
-    Field(description="Aggregations, e.g. [{'aggregation': 'count'}]."),
+    Field(
+        description=(
+            "Compute rules; each requires 'aggregation' (count, cardinality, pc75, "
+            "pc90, pc95, pc98, pc99, sum, min, max, avg, median). Optional: 'type' "
+            "(total [default] or timeseries), 'metric' (the measure facet to "
+            "aggregate), 'interval' (bucket size, only for type=timeseries). "
+            "e.g. [{'aggregation': 'count'}]."
+        )
+    ),
 ]
 GroupBy: TypeAlias = Annotated[
     list[dict[str, Any]] | None,
-    Field(description="Group-by facets, e.g. [{'facet': 'service'}]."),
+    Field(
+        description=(
+            "Group-by rules; each requires 'facet'. Optional per facet: 'limit' "
+            "(max buckets, default 10), 'histogram', 'missing', 'total', and 'sort'. "
+            "sort = {'type': 'alphabetical' [default] or 'measure', 'aggregation' "
+            "(same values as compute), 'metric' (only used when type=measure), "
+            "'order': 'asc' or 'desc'}. e.g. [{'facet': 'service'}]."
+        )
+    ),
 ]
 Queries: TypeAlias = Annotated[
     list[dict[str, Any]],
