@@ -325,7 +325,7 @@ def get_trace(
         ),
     ],
 ) -> TraceResponse:
-    """Get a full APM trace by ID — every span as a flat list (preview API; large traces can be sizable)."""
+    """Get a full APM trace by ID — every span as a flat list (preview API; large traces can be sizable). Prefer get_pruned_trace unless you need every span."""
     return client.get_trace(trace_id)
 
 
