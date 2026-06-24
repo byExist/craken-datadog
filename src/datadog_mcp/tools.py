@@ -48,13 +48,13 @@ Query: TypeAlias = Annotated[
 TimeFrom: TypeAlias = Annotated[
     str | None,
     Field(
-        description="Window start — relative date math like 'now-15m', ISO 8601, or epoch milliseconds."
+        description="Window start — relative date math like 'now-15m', ISO 8601, or epoch milliseconds. Omitted defaults to now-15m."
     ),
 ]
 TimeTo: TypeAlias = Annotated[
     str | None,
     Field(
-        description="Window end — relative date math like 'now', ISO 8601, or epoch milliseconds."
+        description="Window end — relative date math like 'now', ISO 8601, or epoch milliseconds. Omitted defaults to now."
     ),
 ]
 Sort: TypeAlias = Annotated[
