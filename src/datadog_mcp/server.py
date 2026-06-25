@@ -10,7 +10,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
-from datadog_mcp import tools
+from datadog_mcp import annotations, tools
 
 mcp = FastMCP(
     "datadog",
@@ -29,7 +29,7 @@ mcp = FastMCP(
 
 def _register(fns: list[Callable[..., Any]]) -> None:
     for fn in fns:
-        mcp.tool()(fn)
+        mcp.tool(description=annotations.describe(fn))(fn)
 
 
 _register(

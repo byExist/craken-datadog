@@ -23,7 +23,11 @@ from datadog_mcp.schema.incidents import (
     IncidentSearchResponse,
     IncidentsResponse,
 )
-from datadog_mcp.schema.logs import LogsAggregateResponse, LogsListResponse
+from datadog_mcp.schema.logs import (
+    LogsAggregateResponse,
+    LogsIndexListResponse,
+    LogsListResponse,
+)
 from datadog_mcp.schema.metrics import (
     MetricsAndMetricTagConfigurationsResponse,
     ScalarFormulaQueryResponse,
@@ -645,3 +649,8 @@ def get_browser_test_results(
         f"/api/v1/synthetics/tests/browser/{public_id}/results", params=params
     )
     return SyntheticsGetBrowserTestLatestResultsResponse.model_validate(resp.json())
+
+
+def get_log_indexes() -> LogsIndexListResponse:
+    resp = _get_client().get("/api/v1/logs/config/indexes")
+    return LogsIndexListResponse.model_validate(resp.json())

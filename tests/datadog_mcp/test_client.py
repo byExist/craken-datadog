@@ -11,6 +11,7 @@ from datadog_mcp.client import (
     get_event,
     get_host_totals,
     get_incident,
+    get_log_indexes,
     get_monitor,
     get_pruned_trace,
     get_service_definition,
@@ -802,3 +803,29 @@ def test_list_processes(datadog_api: MockServer):
     assert p["to"] == "1600003600"
     assert p["page[limit]"] == "50"
     assert p["page[cursor]"] == "c"
+
+
+def test_get_log_indexes(datadog_api: MockServer):
+    datadog_api.add(
+        "GET",
+        "/api/v1/logs/config/indexes",
+        json={
+            "indexes": [
+                {
+                    "name": "main",
+                    "num_retention_days": 15,
+                    "num_flex_logs_retention_days": 360,
+                    "filter": {"query": "*"},
+                    "daily_limit": 300000000,
+                }
+            ]
+        },
+    )
+
+    result = get_log_indexes()
+
+    assert result.indexes is not None
+    assert result.indexes[0].name == "main"
+    assert result.indexes[0].num_retention_days == 15
+    assert result.indexes[0].filter is not None
+    assert result.indexes[0].filter.query == "*"

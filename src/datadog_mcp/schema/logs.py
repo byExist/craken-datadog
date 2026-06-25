@@ -1,4 +1,4 @@
-"""Datadog v2 log schemas (Logs API)."""
+"""Datadog log schemas — v2 Logs API events and v1 index configuration."""
 
 from datetime import datetime
 from typing import Any, Literal
@@ -71,3 +71,41 @@ class LogsAggregateResponseData(DatadogModel):
 class LogsAggregateResponse(DatadogModel):
     data: LogsAggregateResponseData | None = None
     meta: LogsResponseMetadata | None = None
+
+
+class LogsFilter(DatadogModel):
+    query: str | None = None
+
+
+class LogsExclusionFilter(DatadogModel):
+    query: str | None = None
+    sample_attribute: str | None = None
+    sample_rate: float | None = None
+
+
+class LogsExclusion(DatadogModel):
+    name: str | None = None
+    is_enabled: bool | None = None
+    filter: LogsExclusionFilter | None = None
+
+
+class LogsDailyLimitReset(DatadogModel):
+    reset_time: str | None = None
+    reset_utc_offset: str | None = None
+
+
+class LogsIndex(DatadogModel):
+    name: str | None = None
+    filter: LogsFilter | None = None
+    exclusion_filters: list[LogsExclusion] | None = None
+    num_retention_days: int | None = None
+    num_flex_logs_retention_days: int | None = None
+    daily_limit: int | None = None
+    daily_limit_reset: LogsDailyLimitReset | None = None
+    daily_limit_warning_threshold_percentage: float | None = None
+    is_rate_limited: bool | None = None
+    tags: list[str] | None = None
+
+
+class LogsIndexListResponse(DatadogModel):
+    indexes: list[LogsIndex] | None = None

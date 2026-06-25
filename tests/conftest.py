@@ -1,8 +1,8 @@
 """Shared test fixtures.
 
-``isolate_env`` (autouse) snapshots and clears ``DD_*`` env vars and resets the
-client singleton around every test, so a developer's real Datadog config never
-leaks in. ``datadog_api`` wires a ``support.MockServer`` into the client through
+``isolate_env`` (autouse) snapshots and clears ``DD_*`` env vars, resets the
+client singleton, and clears the retention-annotation cache around every test, so
+a developer's real Datadog config never leaks in. ``datadog_api`` wires a ``support.MockServer`` into the client through
 an ``httpx.MockTransport`` and patches ``get_auth`` with dummy credentials, so
 tests set per-route responses and assert on the requests made. All patching goes
 through pytest-mock's ``mocker``.
@@ -16,6 +16,7 @@ import pytest
 from pytest_mock import MockerFixture
 from support import MockServer
 
+from datadog_mcp import annotations
 from datadog_mcp import client as datadog_client
 from datadog_mcp.config import Auth, get_auth
 
@@ -36,6 +37,7 @@ def isolate_env(mocker: MockerFixture) -> None:
     for var in _DD_ENV:
         os.environ.pop(var, None)
     get_auth.cache_clear()
+    annotations.reset()
     mocker.patch.object(datadog_client, "_client", None)
 
 
