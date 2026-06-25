@@ -42,7 +42,7 @@ def _log_retention_note() -> str | None:
         if index.name is None or index.num_retention_days is None:
             continue
         days = f"{index.num_retention_days}d"
-        if index.num_flex_logs_retention_days is not None:
+        if index.num_flex_logs_retention_days:
             days += f" (+{index.num_flex_logs_retention_days}d flex)"
         parts.append(f"{index.name} {days}")
     if not parts:

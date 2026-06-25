@@ -30,7 +30,9 @@ def test_note_summarizes_indexes(mocker: MockerFixture):
         mocker,
         LogsIndexListResponse(
             indexes=[
-                LogsIndex(name="main", num_retention_days=15),
+                LogsIndex(
+                    name="main", num_retention_days=15, num_flex_logs_retention_days=0
+                ),
                 LogsIndex(
                     name="audit",
                     num_retention_days=30,
@@ -42,6 +44,7 @@ def test_note_summarizes_indexes(mocker: MockerFixture):
 
     note = annotations._log_retention_note()
 
+    # flex of 0 means no flex tier, so it is omitted; a positive flex is shown.
     assert note == "Retention by log index: main 15d, audit 30d (+360d flex)."
 
 
