@@ -1,3 +1,5 @@
+import payloads
+
 from datadog_mcp.schema.dashboards import Dashboard, DashboardSummary
 
 
@@ -58,5 +60,7 @@ def test_dashboard_summary():
 
 
 def test_dump_drops_none():
-    dumped = Dashboard.model_validate({"id": "x", "title": "t"}).model_dump()
-    assert dumped == {"id": "x", "title": "t"}
+    dumped = Dashboard.model_validate(
+        payloads.dashboard(id="x", title="t")
+    ).model_dump()
+    assert dumped == payloads.dashboard(id="x", title="t")

@@ -1,3 +1,5 @@
+import payloads
+
 from datadog_mcp.schema.monitors import (
     CheckCanDeleteMonitorResponse,
     Monitor,
@@ -27,9 +29,7 @@ def test_monitor_full():
                 "variables": [{"data_source": "metrics", "name": "q", "query": "x"}],
             },
             "state": {"groups": {"host:a": {"status": "Alert", "name": "host:a"}}},
-            "assets": [
-                {"category": "runbook", "resource_type": "notebook", "name": "rb"}
-            ],
+            "assets": [payloads.monitor_asset(resource_type="notebook")],
         }
     )
     assert m.id == 123
@@ -92,5 +92,5 @@ def test_check_can_delete():
 
 
 def test_dump_drops_none():
-    dumped = Monitor.model_validate({"id": 1, "name": "x"}).model_dump()
-    assert dumped == {"id": 1, "name": "x"}
+    dumped = Monitor.model_validate(payloads.monitor(id=1, name="x")).model_dump()
+    assert dumped == payloads.monitor(id=1, name="x")

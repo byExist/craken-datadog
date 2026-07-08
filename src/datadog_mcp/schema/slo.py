@@ -33,14 +33,14 @@ class SLOFormula(DatadogModel):
 
 
 class ServiceLevelObjectiveQuery(DatadogModel):
-    denominator: str | None = None
-    numerator: str | None = None
+    denominator: str
+    numerator: str
 
 
 class SLOThreshold(DatadogModel):
     target: float | None = None
     target_display: str | None = None
-    timeframe: SLOTimeframe | None = None
+    timeframe: SLOTimeframe
     warning: float | None = None
     warning_display: str | None = None
 
@@ -106,14 +106,14 @@ class ServiceLevelObjective(DatadogModel):
     modified_at: int | None = None
     monitor_ids: list[int] | None = None
     monitor_tags: list[str] | None = None
-    name: str | None = None
+    name: str
     query: ServiceLevelObjectiveQuery | None = None
     sli_specification: SLOSliSpec | None = None
     tags: list[str] | None = None
     target_threshold: float | None = None
     thresholds: list[SLOThreshold] | None = None
     timeframe: SLOTimeframe | None = None
-    type: SLOType | None = None
+    type: SLOType
     warning_threshold: float | None = None
 
 
@@ -127,14 +127,14 @@ class SLOResponseData(DatadogModel):
     modified_at: int | None = None
     monitor_ids: list[int] | None = None
     monitor_tags: list[str] | None = None
-    name: str | None = None
+    name: str
     query: ServiceLevelObjectiveQuery | None = None
     sli_specification: SLOSliSpec | None = None
     tags: list[str] | None = None
     target_threshold: float | None = None
     thresholds: list[SLOThreshold] | None = None
     timeframe: SLOTimeframe | None = None
-    type: SLOType | None = None
+    type: SLOType
     warning_threshold: float | None = None
 
 
@@ -175,4 +175,4 @@ type SloStatusData = JSONAPIResource[SloStatusDataAttributes]
 
 
 class SloStatusResponse(DatadogModel):
-    data: SloStatusData | None = None
+    data: SloStatusData

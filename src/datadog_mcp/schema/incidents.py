@@ -46,13 +46,13 @@ class IncidentResponseAttributes(DatadogModel):
     time_to_internal_response: int | None = None
     time_to_repair: int | None = None
     time_to_resolve: int | None = None
-    title: str | None = None
+    title: str
     visibility: str | None = None
 
 
 class IncidentResponseData(DatadogModel):
-    id: str | None = None
-    type: str | None = None
+    id: str
+    type: str
     attributes: IncidentResponseAttributes | None = None
     relationships: dict[str, Any] | None = None
 
@@ -68,7 +68,7 @@ class IncidentResponseMeta(DatadogModel):
 
 
 class IncidentResponse(DatadogModel):
-    data: IncidentResponseData | None = None
+    data: IncidentResponseData
     included: list[dict[str, Any]] | None = None
 
 
@@ -79,7 +79,7 @@ class IncidentsResponse(DatadogModel):
 
 
 class IncidentSearchResponseIncidentsData(DatadogModel):
-    data: IncidentResponseData | None = None
+    data: IncidentResponseData
 
 
 class IncidentSearchResponseAttributes(DatadogModel):
@@ -98,6 +98,6 @@ class IncidentSearchResponseMeta(DatadogModel):
 
 
 class IncidentSearchResponse(DatadogModel):
-    data: IncidentSearchResponseData | None = None
+    data: IncidentSearchResponseData
     included: list[dict[str, Any]] | None = None
     meta: IncidentSearchResponseMeta | None = None

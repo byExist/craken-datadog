@@ -1,3 +1,5 @@
+import payloads
+
 from datadog_mcp.schema.traces import PrunedTraceResponse, TraceResponse
 
 
@@ -10,16 +12,16 @@ def test_trace_response_camel_aliases():
                 "attributes": {
                     "is_truncated": False,
                     "spans": [
-                        {
-                            "spanID": 1,
-                            "traceID": 2,
-                            "parentID": 0,
-                            "startTime": 100,
-                            "endTime": 200,
-                            "error": 1,
-                            "service": "api",
-                            "name": "op",
-                        }
+                        payloads.apm_trace_span(
+                            spanID=1,
+                            traceID=2,
+                            parentID=0,
+                            startTime=100,
+                            endTime=200,
+                            error=1,
+                            service="api",
+                            name="op",
+                        )
                     ],
                 },
             }
@@ -46,12 +48,12 @@ def test_pruned_trace_recursive_summarized_span():
                     "size_bytes": 1024,
                     "summarized_trace": {
                         "traceId": "t1",
-                        "root": {
-                            "spanID": 1,
-                            "durationSeconds": 0.5,
-                            "name": "root",
-                            "children": [{"spanID": 2, "name": "child"}],
-                        },
+                        "root": payloads.summarized_span(
+                            spanID=1,
+                            durationSeconds=0.5,
+                            name="root",
+                            children=[payloads.summarized_span(spanID=2, name="child")],
+                        ),
                     },
                 },
             }

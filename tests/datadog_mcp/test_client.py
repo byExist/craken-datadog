@@ -1,3 +1,4 @@
+import payloads
 from support import MockServer
 
 from datadog_mcp.client import (
@@ -275,7 +276,9 @@ def test_get_trace(datadog_api: MockServer):
             "data": {
                 "id": "abc123",
                 "type": "trace",
-                "attributes": {"spans": [{"spanID": 1, "service": "api"}]},
+                "attributes": {
+                    "spans": [payloads.apm_trace_span(spanID=1, service="api")]
+                },
             }
         },
     )
@@ -301,7 +304,11 @@ def test_get_pruned_trace(datadog_api: MockServer):
                 "attributes": {
                     "size_bytes": 2048,
                     "summarized_trace": {
-                        "root": {"spanID": 1, "children": [{"spanID": 2}]}
+                        "traceId": "abc123",
+                        "root": payloads.summarized_span(
+                            spanID=1,
+                            children=[payloads.summarized_span(spanID=2)],
+                        ),
                     },
                 },
             }
@@ -322,7 +329,9 @@ def test_get_pruned_trace(datadog_api: MockServer):
 
 
 def test_list_monitors(datadog_api: MockServer):
-    datadog_api.add("GET", "/api/v1/monitor", json=[{"id": 1, "name": "cpu high"}])
+    datadog_api.add(
+        "GET", "/api/v1/monitor", json=[payloads.monitor(id=1, name="cpu high")]
+    )
 
     result = list_monitors(
         group_states="all",
@@ -347,7 +356,9 @@ def test_list_monitors(datadog_api: MockServer):
 
 
 def test_get_monitor(datadog_api: MockServer):
-    datadog_api.add("GET", "/api/v1/monitor/42", json={"id": 42, "name": "disk"})
+    datadog_api.add(
+        "GET", "/api/v1/monitor/42", json=payloads.monitor(id=42, name="disk")
+    )
 
     result = get_monitor(42, group_states="alert", with_downtimes=False)
 
@@ -475,7 +486,9 @@ def test_get_downtime(datadog_api: MockServer):
 
 def test_list_slos(datadog_api: MockServer):
     datadog_api.add(
-        "GET", "/api/v1/slo", json={"data": [{"id": "slo1", "name": "uptime"}]}
+        "GET",
+        "/api/v1/slo",
+        json={"data": [payloads.service_level_objective(id="slo1", name="uptime")]},
     )
 
     result = list_slos(
@@ -500,7 +513,9 @@ def test_list_slos(datadog_api: MockServer):
 
 def test_get_slo(datadog_api: MockServer):
     datadog_api.add(
-        "GET", "/api/v1/slo/slo1", json={"data": {"id": "slo1", "name": "x"}}
+        "GET",
+        "/api/v1/slo/slo1",
+        json={"data": payloads.service_level_objective(id="slo1", name="x")},
     )
 
     result = get_slo("slo1", with_configured_alert_ids=True)
@@ -532,7 +547,9 @@ def test_list_dashboards(datadog_api: MockServer):
 
 def test_get_dashboard(datadog_api: MockServer):
     datadog_api.add(
-        "GET", "/api/v1/dashboard/dash1", json={"id": "dash1", "title": "Ops"}
+        "GET",
+        "/api/v1/dashboard/dash1",
+        json=payloads.dashboard(id="dash1", title="Ops"),
     )
 
     result = get_dashboard("dash1")

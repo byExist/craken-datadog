@@ -43,8 +43,8 @@ class MetricAllTagsAttributes(DatadogModel):
 
 
 class MetricCustomAggregation(DatadogModel):
-    space: MetricCustomSpaceAggregation | None = None
-    time: MetricCustomTimeAggregation | None = None
+    space: MetricCustomSpaceAggregation
+    time: MetricCustomTimeAggregation
 
 
 class MetricMetaPage(DatadogModel):

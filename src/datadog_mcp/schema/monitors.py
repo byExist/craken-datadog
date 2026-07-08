@@ -61,17 +61,17 @@ class DeletedMonitor(DatadogModel):
 
 class MatchingDowntime(DatadogModel):
     end: int | None = None
-    id: int | None = None
+    id: int
     scope: list[str] | None = None
     start: int | None = None
 
 
 class MonitorAsset(DatadogModel):
-    category: MonitorAssetCategory | None = None
-    name: str | None = None
+    category: MonitorAssetCategory
+    name: str
     resource_key: str | None = None
     resource_type: MonitorAssetResourceType | None = None
-    url: str | None = None
+    url: str
 
 
 class MonitorSearchResultNotification(DatadogModel):
@@ -241,7 +241,7 @@ class MonitorSearchResponse(DatadogModel):
 
 
 class CheckCanDeleteMonitorResponse(DatadogModel):
-    data: CheckCanDeleteMonitorResponseData | None = None
+    data: CheckCanDeleteMonitorResponseData
     errors: dict[str, Any] | None = None
 
 
@@ -260,8 +260,8 @@ class Monitor(DatadogModel):
     options: MonitorOptions | None = None
     overall_state: MonitorOverallStates | None = None
     priority: int | None = None
-    query: str | None = None
+    query: str
     restricted_roles: list[str] | None = None
     state: MonitorState | None = None
     tags: list[str] | None = None
-    type: MonitorType | None = None
+    type: MonitorType

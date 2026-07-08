@@ -23,7 +23,7 @@ class WidgetLayout(DatadogModel):
 
 class Widget(DatadogModel):
     id: int | None = None
-    definition: dict[str, Any] | None = None
+    definition: dict[str, Any]
     layout: WidgetLayout | None = None
 
 
@@ -31,7 +31,7 @@ class DashboardTemplateVariable(DatadogModel):
     available_values: list[str] | None = None
     default: str | None = None
     defaults: list[str] | None = None
-    name: str | None = None
+    name: str
     prefix: str | None = None
     type: str | None = None
 
@@ -54,7 +54,7 @@ class Dashboard(DatadogModel):
     description: str | None = None
     id: str | None = None
     is_read_only: bool | None = None
-    layout_type: DashboardLayoutType | None = None
+    layout_type: DashboardLayoutType
     modified_at: str | None = None
     notify_list: list[str] | None = None
     reflow_type: DashboardReflowType | None = None
@@ -63,7 +63,7 @@ class Dashboard(DatadogModel):
     tags: list[str] | None = None
     template_variable_presets: list[DashboardTemplateVariablePreset] | None = None
     template_variables: list[DashboardTemplateVariable] | None = None
-    title: str | None = None
+    title: str
     url: str | None = None
     widgets: list[Widget] | None = None
 
