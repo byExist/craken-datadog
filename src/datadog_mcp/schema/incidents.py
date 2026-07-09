@@ -7,11 +7,12 @@ notification rules/templates, todos, types, user-defined fields, postmortems) ar
 deferred to their own tools.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 
-type IncidentSeverity = Literal["UNKNOWN", "SEV-0", "SEV-1", "SEV-2", "SEV-3", "SEV-4"]
+# str, not Literal: severity sets are org-customizable and vary from the spec.
+type IncidentSeverity = str
 
 
 class IncidentNotificationHandle(DatadogModel):

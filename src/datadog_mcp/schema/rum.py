@@ -5,12 +5,12 @@ search/aggregate request and a JSON:API event payload, here for browser and
 mobile telemetry (sessions, views, errors, actions, resources).
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type RUMResponseStatus = Literal["done", "timeout"]
+type RUMResponseStatus = str
 
 
 class RUMEventAttributes(DatadogModel):

@@ -5,14 +5,14 @@ A trace is the assembled view of one request, distinct from the searchable
 list, while ``PrunedTraceResponse`` is a size-reduced hierarchical tree.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import Field
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type APMSpanErrorFlag = Literal[0, 1]
+type APMSpanErrorFlag = int
 
 
 class APMTraceSpan(DatadogModel):

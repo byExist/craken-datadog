@@ -4,15 +4,15 @@ APM traces fetched by ID live in ``traces``; this module covers the searchable
 ``Span`` resource and its aggregation.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import Field
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type SpansAggregateResponseStatus = Literal["done", "timeout"]
-type SpansMetricComputeAggregationType = Literal["count", "distribution"]
+type SpansAggregateResponseStatus = str
+type SpansMetricComputeAggregationType = str
 
 
 class SpansWarning(DatadogModel):

@@ -53,6 +53,22 @@ def test_monitor_full():
     assert m.assets[0].category == "runbook"
 
 
+def test_monitor_accepts_type_beyond_the_old_enum():
+    # Datadog's monitor type set (22+ in the spec) grows over time; the field is
+    # required and list_monitors parses each monitor, so an unlisted type like
+    # "slo alert" or "audit alert" used to fail the whole call.
+    m = Monitor.model_validate(
+        {
+            "id": 1,
+            "name": "slo burn",
+            "type": "slo alert",
+            "query": "burn_rate(...)",
+            "overall_state": "Alert",
+        }
+    )
+    assert m.type == "slo alert"
+
+
 def test_monitor_search_response():
     r = MonitorSearchResponse.model_validate(
         {

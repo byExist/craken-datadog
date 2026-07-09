@@ -1,27 +1,28 @@
 """Datadog v2 event schemas (Events API)."""
 
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import Field
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type AlertEventAttributesLinksItemCategory = Literal[
-    "runbook", "documentation", "dashboard"
-]
+# str, not Literal: link categories are an open set the vendored spec undercounts.
+type AlertEventAttributesLinksItemCategory = str
 # str, not Literal: /api/v2/events emits values the vendored spec omits
 # (numeric priorities, "no data" status), so a Literal rejects real payloads.
 type AlertEventAttributesPriority = str
 type AlertEventAttributesStatus = str
-type ChangeEventAttributesAuthorType = Literal["user", "system", "api", "automation"]
-type ChangeEventAttributesChangedResourceType = Literal["feature_flag", "configuration"]
-type ChangeEventAttributesImpactedResourcesItemType = Literal["service"]
+type ChangeEventAttributesAuthorType = str
+# str, not Literal: changed/impacted resource kinds grow beyond the spec's list.
+type ChangeEventAttributesChangedResourceType = str
+type ChangeEventAttributesImpactedResourcesItemType = str
 # str, not Literal — same spec/live mismatch as AlertEventAttributes* above.
 type EventPriority = str
 type EventStatusType = str
-type EventSystemAttributesCategory = Literal["change", "alert"]
-type EventSystemAttributesIntegrationId = Literal["custom-events"]
+type EventSystemAttributesCategory = str
+# str, not Literal: integration ids are an open set (one per Datadog integration).
+type EventSystemAttributesIntegrationId = str
 
 
 class AlertEventAttributesLinksItem(DatadogModel):

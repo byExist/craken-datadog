@@ -13,16 +13,14 @@ from pydantic import Field
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type MetricCustomSpaceAggregation = Literal["avg", "max", "min", "sum"]
-type MetricCustomTimeAggregation = Literal["avg", "count", "max", "min", "sum"]
-type MetricMetaPageType = Literal["cursor_limit"]
-type MetricTagConfigurationMetricTypes = Literal[
-    "gauge", "count", "rate", "distribution"
-]
+type MetricCustomSpaceAggregation = str
+type MetricCustomTimeAggregation = str
+type MetricMetaPageType = str
+type MetricTagConfigurationMetricTypes = str
 type ScalarColumnTypeGroup = Literal["group"]
 type ScalarColumnTypeNumber = Literal["number"]
-type ScalarFormulaResponseType = Literal["scalar_response"]
-type TimeseriesFormulaResponseType = Literal["timeseries_response"]
+type ScalarFormulaResponseType = str
+type TimeseriesFormulaResponseType = str
 
 type GroupTags = list[str]
 type TimeseriesResponseTimes = list[int]

@@ -4,20 +4,18 @@ Scoped to reading SLO definitions (get/list) and v2 SLO status. History, search,
 corrections, bulk-delete, and report endpoints are deferred to their own tools.
 """
 
-from typing import Literal
-
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type FormulaAndFunctionMetricAggregation = Literal[
-    "avg", "min", "max", "sum", "last", "area"
-]
-type FormulaAndFunctionMetricDataSource = Literal["metrics"]
-type FormulaAndFunctionMetricSemanticMode = Literal["combined", "native"]
-type SLOTimeSliceComparator = Literal[">", ">=", "<", "<="]
-type SLOTimeSliceInterval = Literal[60, 300]
-type SLOTimeframe = Literal["7d", "30d", "90d", "custom"]
-type SLOType = Literal["metric", "monitor", "time_slice"]
+# str, not Literal: the aggregation set may grow (percentile, l2norm, ...).
+type FormulaAndFunctionMetricAggregation = str
+type FormulaAndFunctionMetricDataSource = str
+type FormulaAndFunctionMetricSemanticMode = str
+type SLOTimeSliceComparator = str
+type SLOTimeSliceInterval = int
+type SLOTimeframe = str
+# str, not Literal: SLO types have grown historically (time_slice was added).
+type SLOType = str
 
 type CrossOrgUuids = list[str]
 

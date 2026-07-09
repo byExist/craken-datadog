@@ -1,12 +1,12 @@
 """Datadog log schemas — v2 Logs API events and v1 index configuration."""
 
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type LogsAggregateResponseStatus = Literal["done", "timeout"]
+type LogsAggregateResponseStatus = str
 
 
 class LogAttributes(DatadogModel):

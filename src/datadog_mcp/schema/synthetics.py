@@ -5,16 +5,16 @@ result ``timings``/browser result detail are left loose as ``dict`` / ``list[dic
 Global variables, private locations, and CI triggers are deferred to their own tools.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 
-type SyntheticsTestDetailsType = Literal["api", "browser", "mobile", "network"]
-type SyntheticsTestDetailsSubType = Literal[
-    "http", "ssl", "tcp", "dns", "multi", "icmp", "udp", "websocket"
-]
-type SyntheticsTestPauseStatus = Literal["live", "paused"]
-type SyntheticsTestMonitorStatus = Literal[0, 1, 2]
+# str, not Literal: test types and subtypes grow (e.g. grpc), so a Literal rejects
+# real payloads.
+type SyntheticsTestDetailsType = str
+type SyntheticsTestDetailsSubType = str
+type SyntheticsTestPauseStatus = str
+type SyntheticsTestMonitorStatus = int
 
 
 class Creator(DatadogModel):

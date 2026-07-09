@@ -5,12 +5,12 @@ loose as ``dict`` on ``Widget.definition`` — the data is preserved for reading
 without modeling every widget variant. Tabbed-dashboard ``tabs`` are likewise loose.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 
-type DashboardLayoutType = Literal["ordered", "free"]
-type DashboardReflowType = Literal["auto", "fixed"]
+type DashboardLayoutType = str
+type DashboardReflowType = str
 
 
 class WidgetLayout(DatadogModel):

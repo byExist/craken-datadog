@@ -5,48 +5,24 @@ are left loose as ``list[dict]`` on ``MonitorOptions.variables`` — a deep, rar
 needed query-definition zoo.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 
-type MonitorAssetCategory = Literal["runbook"]
-type MonitorAssetResourceType = Literal["notebook"]
-type MonitorDeviceID = Literal[
-    "laptop_large",
-    "tablet",
-    "mobile_small",
-    "chrome.laptop_large",
-    "chrome.tablet",
-    "chrome.mobile_small",
-    "firefox.laptop_large",
-]
-type MonitorDraftStatus = Literal["draft", "published"]
-type MonitorOptionsNotificationPresets = Literal[
-    "show_all",
-    "hide_query",
-    "hide_handles",
-    "hide_all",
-    "hide_query_and_handles",
-    "show_only_snapshot",
-    "hide_handles_and_footer",
-]
-type MonitorOverallStates = Literal[
-    "Alert", "Ignored", "No Data", "OK", "Skipped", "Unknown", "Warn"
-]
-type MonitorRenotifyStatusType = Literal["alert", "warn", "no data"]
-type MonitorType = Literal[
-    "composite",
-    "event alert",
-    "log alert",
-    "metric alert",
-    "process alert",
-    "query alert",
-    "rum alert",
-]
-type OnMissingDataOption = Literal[
-    "default", "show_no_data", "show_and_notify_no_data", "resolve"
-]
-type QuerySortOrder = Literal["asc", "desc"]
+# str, not Literal: asset kinds and browser device ids are open, partly-listed sets.
+type MonitorAssetCategory = str
+type MonitorAssetResourceType = str
+type MonitorDeviceID = str
+type MonitorDraftStatus = str
+# str, not Literal: Datadog adds notification presets over time.
+type MonitorOptionsNotificationPresets = str
+type MonitorOverallStates = str
+type MonitorRenotifyStatusType = str
+# str, not Literal: monitor types far exceed this list (service check, slo alert,
+# ci-* alert, audit alert, error-tracking alert, ...), so a Literal rejects payloads.
+type MonitorType = str
+type OnMissingDataOption = str
+type QuerySortOrder = str
 
 
 class Creator(DatadogModel):

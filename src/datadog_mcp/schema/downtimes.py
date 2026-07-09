@@ -5,14 +5,14 @@ are left loose as ``dict`` / ``list[dict]`` — linkage data is preserved for re
 without modeling the cross-domain relationship zoo.
 """
 
-from typing import Any, Literal
+from typing import Any
 
 from datadog_mcp.schema.base import DatadogModel
 from datadog_mcp.schema.generic import JSONAPIResource
 
-type DowntimeStatus = Literal["active", "canceled", "ended", "scheduled"]
-type DowntimeNotifyEndStateActions = Literal["canceled", "expired"]
-type DowntimeNotifyEndStateTypes = Literal["alert", "no data", "warn"]
+type DowntimeStatus = str
+type DowntimeNotifyEndStateActions = str
+type DowntimeNotifyEndStateTypes = str
 
 type DowntimeNotifyEndStates = list[DowntimeNotifyEndStateTypes]
 type DowntimeNotifyEndTypes = list[DowntimeNotifyEndStateActions]
