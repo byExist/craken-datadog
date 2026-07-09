@@ -10,13 +10,16 @@ from datadog_mcp.schema.generic import JSONAPIResource
 type AlertEventAttributesLinksItemCategory = Literal[
     "runbook", "documentation", "dashboard"
 ]
-type AlertEventAttributesPriority = Literal["1", "2", "3", "4", "5"]
-type AlertEventAttributesStatus = Literal["warn", "error", "ok"]
+# str, not Literal: /api/v2/events emits values the vendored spec omits
+# (numeric priorities, "no data" status), so a Literal rejects real payloads.
+type AlertEventAttributesPriority = str
+type AlertEventAttributesStatus = str
 type ChangeEventAttributesAuthorType = Literal["user", "system", "api", "automation"]
 type ChangeEventAttributesChangedResourceType = Literal["feature_flag", "configuration"]
 type ChangeEventAttributesImpactedResourcesItemType = Literal["service"]
-type EventPriority = Literal["normal", "low"]
-type EventStatusType = Literal["failure", "error", "warning", "info", "success"]
+# str, not Literal — same spec/live mismatch as AlertEventAttributes* above.
+type EventPriority = str
+type EventStatusType = str
 type EventSystemAttributesCategory = Literal["change", "alert"]
 type EventSystemAttributesIntegrationId = Literal["custom-events"]
 

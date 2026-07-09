@@ -61,6 +61,36 @@ def test_events_list_response():
     assert r.meta.warnings[0].code == "w"
 
 
+def test_events_list_response_tolerates_live_enum_values():
+    # The data list validates atomically, so a stray "warn"/numeric priority used
+    # to fail the whole call, not just its own event. Mix good + stray to prove it.
+    r = EventsListResponse.model_validate(
+        {
+            "data": [
+                {
+                    "id": "ok",
+                    "type": "event",
+                    "attributes": {
+                        "attributes": {"status": "success", "priority": "normal"}
+                    },
+                },
+                {
+                    "id": "warn",
+                    "type": "event",
+                    "attributes": {"attributes": {"status": "warn", "priority": "4"}},
+                },
+            ]
+        }
+    )
+    assert r.data is not None
+    assert len(r.data) == 2
+    assert r.data[1].attributes is not None
+    inner = r.data[1].attributes.attributes
+    assert inner is not None
+    assert inner.status == "warn"
+    assert inner.priority == "4"
+
+
 def test_v2_event_union_discriminates_alert_and_change():
     alert = V2EventResponse.model_validate(
         {
