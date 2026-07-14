@@ -83,6 +83,8 @@ GroupBy: TypeAlias = Annotated[
         description=(
             "Group-by rules; each requires 'facet'. Optional per facet: 'limit' "
             "(max buckets, default 10), 'histogram', 'missing', 'total', and 'sort'. "
+            "Events lacking any grouped facet are silently dropped from all buckets "
+            "unless that facet sets 'missing' as a fallback bucket value. "
             "sort = {'type': 'alphabetical' [default] or 'measure', 'aggregation' "
             "(same values as compute), 'metric' (only used when type=measure), "
             "'order': 'asc' or 'desc'}. e.g. [{'facet': 'service'}]."
